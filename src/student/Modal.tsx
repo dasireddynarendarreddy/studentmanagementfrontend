@@ -1,6 +1,6 @@
 // components/StudentForm.jsx
 import { useEffect, useState} from "react";
-import axios from "axios";
+
 import {type CSSProperties} from "react";
 import {AddUser} from "../services/AddUser";
 function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () => void; student: any }) {

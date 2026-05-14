@@ -1,6 +1,4 @@
 
-import { Field, Input } from "@chakra-ui/react"
-import {Button} from "@chakra-ui/react"
 import { AddUser } from "../services/AddUser"
 import { useState } from "react"
 import { type ApiResponse } from "../types/response"
@@ -10,12 +8,13 @@ import { type CSSProperties } from "react";
 import Modal from "./Modal"
 import Avatar from './Avatar'
 import Skeletion from "./Skeletion"
+import CsvDownloader from 'react-csv-downloader';
 function Add() {
-    const[data,setData] = useState({
+    /*const[data,setData] = useState({
         email: "",
         firstName: "",
         lastName: ""
-    });
+    });*/
     const[isLoading,setIsLoading] = useState(false);
     const[users,setUsers] = useState<any[]>([]);
     const[showModal,setShowModal] = useState(false);
@@ -113,7 +112,7 @@ const fetchUsers = async () => {
             console.error("Error fetching users:", error);
           }
         };
-    const saveUser = async () => {
+    /*const saveUser= async () => {
         setIsLoading(true);
         try {
             const response:ApiResponse<any> = await AddUser.addUser(data);
@@ -130,7 +129,7 @@ const fetchUsers = async () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    };*/
    const deleteUser = async (id: string) => {
         try {
           await AddUser.deleteUser(id);
@@ -153,10 +152,10 @@ const fetchUsers = async () => {
         }
       }
 
-      const onClose = () => {
+      /*const onClose = () => {
           setShowModal(false);
           setDatatoedit(null);
-      }
+      }*/
       const onSave = () => {
         
         fetchUsers();
@@ -242,7 +241,20 @@ const fetchUsers = async () => {
         >
           &#43; Add Student
         </button>
+         <div>
+        <CsvDownloader
+        filename="myfile"
+        extension=".csv"
+        separator=";"
+        wrapColumnChar="'"
+        datas={users}
+        text="DOWNLOAD" />
+        </div>
       </div>
+       
+          
+        
+
 
       {/* modal — only shows when button clicked */}
       {showModal && (
