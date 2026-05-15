@@ -9,7 +9,9 @@ import Modal from "./Modal"
 import Avatar from './Avatar'
 import Skeletion from "./Skeletion"
 import CsvDownloader from 'react-csv-downloader';
+import {useNavigate} from "react-router-dom";
 function Add() {
+    const navigate = useNavigate();
     /*const[data,setData] = useState({
         email: "",
         firstName: "",
@@ -32,22 +34,7 @@ function Add() {
 
 
 
-   const navStyle = {
-    background: "#3C3489",
-    padding: "12px 24px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  };
-
-  const logoStyle = {
-    color: "#EEEDFE",
-    fontSize: "16px",
-    fontWeight: "600",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  };
+   
 
   const toolbarStyle = {
     display: "flex",
@@ -100,6 +87,10 @@ function Add() {
 
         fetchUsers();
     }, []);
+
+    const showUser = (id:string) => {
+      navigate(`/students/${id}`);
+    }
 const fetchUsers = async () => {
           try {
             setIsLoading(true);
@@ -167,16 +158,7 @@ const fetchUsers = async () => {
 
   return (
     <div>
-      <div style={navStyle}>
-        <div style={logoStyle}>
-          &#127979; Student Management
-        </div>
-        <div style={{ display: "flex", gap: "20px" }}>
-          <span style={{ color: "#AFA9EC", fontSize: "14px", cursor: "pointer" }}>Dashboard</span>
-          <span style={{ color: "#AFA9EC", fontSize: "14px", cursor: "pointer" }}>Students</span>
-          <span style={{ color: "#AFA9EC", fontSize: "14px", cursor: "pointer" }}>Courses</span>
-        </div>
-      </div>
+      
 
       {/* stat cards */}
       <div style={{
@@ -281,7 +263,9 @@ const fetchUsers = async () => {
     {
       // Assuming you have a users array in your state
       isLoading?<Skeletion />:users.map((user, index) => (
-       <tr key={index} className="align-middle cursor-pointer">
+        
+       <tr key={index} className="align-middle cursor-pointer" onClick={() => showUser(user.id)}>
+        
       <td>{index + 1}</td>
       <td>
         <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
@@ -291,6 +275,7 @@ const fetchUsers = async () => {
     
 
     {/* name next to avatar */}
+    
     <Avatar firstName={user.firstName} lastName={user.lastName} />
     <span>{user.firstName} {user.lastName}</span>
 
@@ -301,14 +286,21 @@ const fetchUsers = async () => {
         <td>{user.email}</td>
       <td>{user.id}</td>
       <td>
-        <button className="btn btn-danger btn-sm" onClick={() => deleteUser(user.id)}>
+        <button className="btn btn-danger btn-sm" onClick={(e) =>{
+            e.stopPropagation()
+           deleteUser(user.id)
+        }}>
     <i className="bi bi-trash3"></i>
         </button>&nbsp; &nbsp;
-        <button className="btn btn-primary btn-sm" onClick={() => editUser(user.id)}>
+        <button className="btn btn-primary btn-sm" onClick={(e) =>{
+           e.stopPropagation()
+           editUser(user.id)}}>
           <i className="bi bi-pencil-square"></i>
         </button>
       </td>
+      
     </tr>
+    
       ))
     }
   </tbody>

@@ -30,6 +30,17 @@
         throw error;
       }
     },
+    getById:async (id:any) => {
+
+      try {
+        const response = await axios.get(`${API_URL}get/${id}`);
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching user by ID:", error);
+        throw error;
+      }
+      
+    }
   }
 
 
