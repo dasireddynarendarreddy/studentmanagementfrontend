@@ -40,8 +40,17 @@
         throw error;
       }
       
-    }
+    },
+    updateUser: async (user:any) => {
+      try {
+        const response = await axios.patch(`${API_URL}edit`, user);
+        return response.data;
+      } catch (error) {
+        console.error("Error updating user:", error);
+        throw error;
+      }
   }
+}
 
 
 

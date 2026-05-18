@@ -5,9 +5,12 @@ import {type CSSProperties} from "react";
 import {AddUser} from "../services/AddUser";
 function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () => void; student: any }) {
   const [formData, setFormData] = useState({
+    id: "",
     email: "",
     firstName: "",
     lastName: "",
+    department:"",
+    status: ""
   });
 
   const [errors, setErrors] = useState<any>({});
@@ -17,9 +20,12 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
   useEffect(() => {
     if (student) {
       setFormData({   
+      id: student.id,
       email: student.email,
       firstName: student.firstName,
       lastName: student.lastName,
+      department: student.department,
+      status: student.status
     });
     setEditMode(true);
   }}, [student])
@@ -33,6 +39,8 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
     }
     if (!formData.firstName||formData.firstName.trim() === "") newErrors.firstName = "First name is required";
     if (!formData.lastName||formData.lastName.trim() === "") newErrors.lastName = "Last name is required";
+    if(!formData.department) newErrors.department = "Department is required";
+    if(!formData.status) newErrors.status = "Status is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -45,6 +53,7 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
   const handleSubmit = async () => {
     if (!validate()) return;
     setLoading(true);
+    if(!editMode){
     try {
       await AddUser.addUser(formData);
       onSave(); // refresh list in parent
@@ -54,6 +63,16 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
     } finally {
       setLoading(false);
     }
+  } else {    try {
+      await AddUser.updateUser(formData);
+      onSave(); // refresh list in parent
+      onClose(); // close modal
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
   };
 
   // styles
@@ -105,6 +124,23 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
         </div>
 
         {/* email field */}
+
+
+        {editMode?<div>
+          <label style={labelStyle}>
+            Email <span style={{ color: "#e44" }}>*</span>
+          </label>
+          <input
+            name="id"
+            type="number"
+            placeholder="Enter ID"
+            value={formData.id}
+            onChange={handleChange}
+            style={inputStyle(errors.id)}
+            disabled
+          />
+          {errors.id && <div style={errorStyle}>{errors.id}</div>}
+        </div>:""}
         <div>
           <label style={labelStyle}>
             Email <span style={{ color: "#e44" }}>*</span>
@@ -151,6 +187,142 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
           />
           {errors.lastName && <div style={errorStyle}>{errors.lastName}</div>}
         </div>
+
+        <div style={{ marginBottom: "20px" }}>
+  <label style={{
+    display: "block",
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: "8px",
+    letterSpacing: "0.5px"
+  }}>
+    Status <span style={{ color: "#e74c3c" }}>*</span>
+  </label>
+  
+  <select 
+    name="status" 
+    onChange={handleChange}
+    value={formData.status}
+    style={{
+      width: "100%",
+      padding: "12px 14px",
+      fontSize: "14px",
+      border: errors.status ? "2px solid #e74c3c" : "2px solid #ddd",
+      borderRadius: "6px",
+      backgroundColor: "#fff",
+      color: "#333",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      fontFamily: "inherit",
+      appearance: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "right 12px center",
+      paddingRight: "36px",
+    }}
+    onFocus={(e) => {
+      e.target.style.borderColor = "#3498db";
+      e.target.style.boxShadow = "0 0 0 3px rgba(52, 152, 219, 0.1)";
+    }}
+    onBlur={(e) => {
+      e.target.style.borderColor = errors.status ? "#e74c3c" : "#ddd";
+      e.target.style.boxShadow = "none";
+    }}
+  >
+    <option value="" disabled selected>
+      Select an option
+    </option>
+    <option value="Active">Active</option>
+    <option value="Inactive">Inactive</option>
+  </select>
+
+  {errors.status && (
+    <div style={{
+      color: "#e74c3c",
+      fontSize: "13px",
+      marginTop: "6px",
+      fontWeight: "500",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px"
+    }}>
+      <span>⚠</span> {errors.status}
+    </div>
+  )}
+</div>
+
+
+
+          <div style={{ marginBottom: "20px" }}>
+  <label style={{
+    display: "block",
+    fontSize: "14px",
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: "8px",
+    letterSpacing: "0.5px"
+  }}>
+    Department <span style={{ color: "#e74c3c" }}>*</span>
+  </label>
+  
+  <select 
+    name="department" 
+    onChange={handleChange}
+    value={formData.department}
+    style={{
+      width: "100%",
+      padding: "12px 14px",
+      fontSize: "14px",
+      border: errors.department ? "2px solid #e74c3c" : "2px solid #ddd",
+      borderRadius: "6px",
+      backgroundColor: "#fff",
+      color: "#333",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      fontFamily: "inherit",
+      appearance: "none",
+      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "right 12px center",
+      paddingRight: "36px",
+    }}
+    onFocus={(e) => {
+      e.target.style.borderColor = "#3498db";
+      e.target.style.boxShadow = "0 0 0 3px rgba(52, 152, 219, 0.1)";
+    }}
+    onBlur={(e) => {
+      e.target.style.borderColor = errors.department ? "#e74c3c" : "#ddd";
+      e.target.style.boxShadow = "none";
+    }}
+  >
+    <option value="" disabled selected>
+      Select an option
+    </option>
+    <option value="CSE">Computer Science & Engineering</option>
+    <option value="ECE">Electronics & Communication</option>
+    <option value="Mechanical">Mechanical Engineering</option>
+    <option value="Civil">Civil Engineering</option>
+    <option value="Chemical">Chemical Engineering</option>
+    <option value="Aerospace">Aerospace Engineering</option>
+    <option value="Biotechnology">Biotechnology</option>
+    <option value="EEE">Electrical & Electronics</option>
+  </select>
+
+  {errors.department && (
+    <div style={{
+      color: "#e74c3c",
+      fontSize: "13px",
+      marginTop: "6px",
+      fontWeight: "500",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px"
+    }}>
+      <span>⚠</span> {errors.department}
+    </div>
+  )}
+</div>
 
         {/* buttons */}
         <div style={{ display: "flex", gap: "10px", marginTop: "4px" }}>

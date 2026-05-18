@@ -250,7 +250,7 @@ function StudentProfile() {
                 alignItems: "center", gap: "4px",
               }}>
                 <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#1D9E75", display: "inline-block" }} />
-                Active
+                {student.status== "Active" ? "Active" : "Inactive"}
               </span>
             </div>
             <div style={{ fontSize: "13px", color: "#888", marginTop: "3px" }}>

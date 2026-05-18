@@ -133,6 +133,7 @@ const fetchUsers = async () => {
   const editUser = async (id: string) => {
     setShowModal(true);
     let dataToEdit = users.find(u => u.id === id);
+    console.log("User to edit:", dataToEdit);
     setDatatoedit(dataToEdit);
     console.log("Data to edit:", dataToEdit);
         try {
@@ -256,6 +257,8 @@ const fetchUsers = async () => {
       <th scope="col">First</th>
       <th scope="col">Mail</th>
       <th scope="col">ID</th>
+      <th scope="col">Department</th>
+      <th scope="col">Status</th>
       <th scope="col">Action</th>
     </tr>
   </thead>
@@ -285,6 +288,38 @@ const fetchUsers = async () => {
         </td>
         <td>{user.email}</td>
       <td>{user.id}</td>
+      <td>{user.department}</td>
+     <td>
+  <span style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "6px 12px",
+    borderRadius: "20px",
+    fontSize: "13px",
+    fontWeight: "600",
+    ...(user.status === "Active" 
+      ? {
+          backgroundColor: "#d4edda",
+          color: "#155724",
+          border: "1px solid #c3e6cb"
+        }
+      : {
+          backgroundColor: "#f8d7da",
+          color: "#721c24",
+          border: "1px solid #f5c6cb"
+        }
+    )
+  }}>
+    <span style={{
+      width: "8px",
+      height: "8px",
+      borderRadius: "50%",
+      backgroundColor: user.status === "Active" ? "#28a745" : "#dc3545"
+    }} />
+    {user.status}
+  </span>
+      </td>
       <td>
         <button className="btn btn-danger btn-sm" onClick={(e) =>{
             e.stopPropagation()
@@ -297,7 +332,8 @@ const fetchUsers = async () => {
            editUser(user.id)}}>
           <i className="bi bi-pencil-square"></i>
         </button>
-      </td>
+        </td>
+     
       
     </tr>
     
