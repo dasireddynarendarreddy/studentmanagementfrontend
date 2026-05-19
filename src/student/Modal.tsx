@@ -5,22 +5,21 @@ import {type CSSProperties} from "react";
 import {AddUser} from "../services/AddUser";
 function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () => void; student: any }) {
   const [formData, setFormData] = useState({
-    id: "",
     email: "",
     firstName: "",
     lastName: "",
-    department:"",
-    status: ""
+    department:"CSE",
+    status: "Active"
   });
 
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState(false);
   const[editMode,setEditMode] = useState(false);
+  const[userid,setuserid] = useState();
 
   useEffect(() => {
     if (student) {
-      setFormData({   
-      id: student.id,
+      setFormData({ 
       email: student.email,
       firstName: student.firstName,
       lastName: student.lastName,
@@ -28,6 +27,7 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
       status: student.status
     });
     setEditMode(true);
+    setuserid(student.id);
   }}, [student])
   // validation
   const validate = () => {
@@ -64,7 +64,7 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
       setLoading(false);
     }
   } else {    try {
-      await AddUser.updateUser(formData);
+      await AddUser.updateUser({id:userid, ...formData});
       onSave(); // refresh list in parent
       onClose(); // close modal
     } catch (error) {
@@ -134,8 +134,7 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
             name="id"
             type="number"
             placeholder="Enter ID"
-            value={formData.id}
-            onChange={handleChange}
+            value={userid}
             style={inputStyle(errors.id)}
             disabled
           />
@@ -230,7 +229,7 @@ function Modal({ onClose, onSave,student }: { onClose: () => void; onSave: () =>
       e.target.style.boxShadow = "none";
     }}
   >
-    <option value="" disabled selected>
+    <option value="" disabled>
       Select an option
     </option>
     <option value="Active">Active</option>
