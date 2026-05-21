@@ -225,13 +225,17 @@ const fetchUsers = async () => {
           &#43; Add Student
         </button>
          <div>
-        <CsvDownloader
-        filename="myfile"
-        extension=".csv"
-        separator=";"
-        wrapColumnChar="'"
-        datas={users}
-        text="DOWNLOAD" />
+             <CsvDownloader
+  filename="myfile"
+  extension=".csv"
+  separator=";"
+  wrapColumnChar="'"
+  datas={users}
+>
+  <button className="btn btn-success d-flex align-items-center gap-2">
+    DOWNLOAD
+  </button>
+</CsvDownloader>
         </div>
       </div>
        

@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { AddUser } from "@/services/AddUser";
 import { toast } from "react-toastify";
 import { type CSSProperties } from "react";
+import Modal from '../student/Modal';
 
 const DEPARTMENTS = [
     "All",
@@ -40,6 +41,8 @@ export default function AllCourses() {
   const [loading, setLoading]         = useState(false);
   const [selectedTab, setSelectedTab] = useState("All");
   const [selectedDept, setSelectedDept] = useState<string | null>(null);
+  const[modalOpen, setModalOpen] = useState(false);
+  const[selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => { fetchStudents(); }, []);
 
@@ -54,6 +57,8 @@ export default function AllCourses() {
       setLoading(false);
     }
   };
+
+   
 
   // ── derive everything from students ──────────────
   const totalEnrolled = students.length;
@@ -81,6 +86,12 @@ export default function AllCourses() {
     if (!selectedDept) return [];
     return students.filter(s => s.department === selectedDept);
   }, [students, selectedDept]);
+
+
+  const editStudent = (student: any) => {
+    setModalOpen(true);
+    setSelectedStudent(student);
+  };
 
   const getInitials = (f: string, l: string) =>
     `${f?.charAt(0).toUpperCase()}${l?.charAt(0).toUpperCase()}`;
@@ -173,6 +184,16 @@ export default function AllCourses() {
           }} />
         </div>
       )}
+
+
+      {
+        modalOpen && (
+          <Modal onClose={() => setModalOpen(false)} onSave={()=>fetchStudents()} student={selectedStudent}/>
+            
+              
+         
+        )
+      }
 
       {/* course cards grid */}
       {!loading && (
@@ -341,14 +362,14 @@ export default function AllCourses() {
                     borderRadius: "4px", border: "0.5px solid #85B7EB",
                     background: "#E6F1FB", color: "#185FA5",
                     cursor: "pointer", marginRight: "3px"
-                  }}>
+                  }} onClick={() => editStudent(s)}>
                     Edit
                   </button>
                   <button style={{
                     fontSize: "11px", padding: "3px 7px",
                     borderRadius: "4px", border: "0.5px solid #F09595",
                     background: "#FCEBEB", color: "#A32D2D", cursor: "pointer"
-                  }}>
+                  }} onClick={() => toast.info("Delete student feature coming soon!")}>
                     Delete
                   </button>
                 </div>
