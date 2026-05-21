@@ -3,6 +3,8 @@ import './App.css'
 import Add from './student/Add'
 import {Link, Route, Routes} from "react-router-dom"  
 import ViewStudent from './student/ViewStudent'
+import Dashboard from './dashboard/Dashboard'
+import AllCourses from './courses/AllCourses'
 function App() {
 
   const navStyle = {
@@ -44,8 +46,8 @@ function App() {
   <Routes>
     <Route path='/students' element={<Add/>}/>
     <Route path='/students/:id' element={<ViewStudent/>}/>
-    <Route path='/' element={<div>Dashboard</div>}/>
-    <Route path='/courses' element={<div>Courses</div>}/>
+    <Route path='/' element={<Dashboard/>}/>
+    <Route path='/courses' element={<AllCourses/>}/>
   </Routes>
    
   </>
