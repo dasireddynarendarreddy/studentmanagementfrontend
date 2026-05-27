@@ -48,6 +48,7 @@ function App() {
     <Route path='/students/:id' element={<ViewStudent/>}/>
     <Route path='/' element={<Dashboard/>}/>
     <Route path='/courses' element={<AllCourses/>}/>
+    <Route path='*' element={<h1 style={{textAlign:"center", marginTop:"40px"}}>404 Not Found</h1>}/>
   </Routes>
    
   </>
